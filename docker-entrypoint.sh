@@ -7,5 +7,6 @@ if [ "$NODE_ENV" = "development" ]; then
     exec node --watch dist/index.js
 else
     echo "Starting in production mode"
+    yarn build
     exec node dist/index.js
 fi
