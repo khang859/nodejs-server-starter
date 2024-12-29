@@ -4,7 +4,7 @@ Simple NodeJS based server starter repo.
 
 ## Features
 
-- NodeJS 20+
+- NodeJS 22+ (Alpine) for the native typescript support.
 - Typescript
 - Hono
 - Handlebars for templating
