@@ -1,0 +1,10 @@
+{
+  "name": "nodejs-server-starter",
+  "version": "0.0.1",
+  "description": "Simple NodeJS Server Starter",
+  "main": "src/index.ts",
+  "repository": "git@github.com:khang859/nodejs-server-starter.git",
+  "author": "Khang Nguyen",
+  "license": "MIT",
+  "private": true
+}
