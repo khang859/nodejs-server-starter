@@ -3,6 +3,7 @@ import helmet from 'helmet';
 
 const app = express();
 
+// Security
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -10,6 +11,13 @@ app.use(
     },
   }),
 );
+
+// Body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files
+app.use(express.static('public'));
 
 const port = process.env.PORT || 3000;
 
