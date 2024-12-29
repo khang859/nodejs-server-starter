@@ -5,13 +5,17 @@
   "repository": "git@github.com:khang859/nodejs-server-starter.git",
   "author": "Khang Nguyen",
   "license": "MIT",
+  "main": "dist/index.js",
   "private": true,
   "dependencies": {
     "express": "^4.21.2"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js",
-    "lint": "eslint src/**/*.ts"
+    "build": "./node_modules/.bin/tsc",
+    "watch": "./node_modules/.bin/tsc --watch",
+    "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
