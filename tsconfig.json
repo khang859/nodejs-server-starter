@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "es2022",
+    "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es2017",
+    "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",

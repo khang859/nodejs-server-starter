@@ -5,13 +5,19 @@ const fastify = Fastify({
   logger: true,
 });
 
-// Register routes
-fastify.register(UserRoutes, { prefix: '/users' });
+const registerRoutes = () => {
+  fastify.register(UserRoutes, { prefix: '/users' });
+};
 
-// Run the server!
-try {
-  await fastify.listen({ port: 3000 });
-} catch (err) {
-  fastify.log.error(err);
-  process.exit(1);
-}
+const start = async () => {
+  try {
+    registerRoutes();
+
+    await fastify.listen({ port: 3000 });
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
