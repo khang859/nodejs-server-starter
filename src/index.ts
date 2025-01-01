@@ -1,30 +1,17 @@
-import express from 'express';
-import helmet from 'helmet';
+import Fastify from 'fastify';
+import { UserRoutes } from '@/routes/UserRoutes';
 
-const app = express();
-
-// Security
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      reportOnly: true, // Don't enforce CSP, just report violations
-    },
-  }),
-);
-
-// Body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Static files
-app.use(express.static('public'));
-
-const port = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const fastify = Fastify({
+  logger: true,
 });
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+// Register routes
+fastify.register(UserRoutes, { prefix: '/users' });
+
+// Run the server!
+try {
+  await fastify.listen({ port: 3000 });
+} catch (err) {
+  fastify.log.error(err);
+  process.exit(1);
+}
