@@ -3,14 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: app
     ports:
       - '3000:3000'
     env_file:
       - .env
     volumes:
       - .:/app
-    networks:
-      - demo
     depends_on:
       - postgres
   postgres:
@@ -20,11 +19,10 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
-    networks:
-      - demo
 
-networks:
-  demo:
+volumes:
+  postgres_data:
+
