@@ -8,10 +8,15 @@
   "main": "dist/index.js",
   "private": true,
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
+    "drizzle-orm": "^0.38.3",
     "fastify": "^5.2.0",
     "handlebars": "^4.7.8",
     "helmet": "^8.0.0",
-    "tsc-alias": "^1.8.10"
+    "pg": "^8.13.1",
+    "tsc-alias": "^1.8.10",
+    "zod": "^3.24.1"
   },
   "scripts": {
     "build": "tsc && tsc-alias",
@@ -21,7 +26,9 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -29,13 +36,15 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.10.3",
+    "@types/pg": "^8.11.10",
+    "concurrently": "^9.1.2",
+    "drizzle-kit": "^0.30.1",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
     "jest": "^29.7.0",
     "prettier": "^3.4.2",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "concurrently": "^9.1.2",
     "tsc": "^2.0.4",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2"

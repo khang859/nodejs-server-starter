@@ -3,7 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: app
     ports:
       - '3000:3000'
     env_file:
@@ -14,7 +13,6 @@ services:
       - postgres
   postgres:
     image: postgres:latest
-    container_name: postgres
     restart: always
     ports:
       - '5432:5432'
@@ -25,4 +23,3 @@ services:
 
 volumes:
   postgres_data:
-

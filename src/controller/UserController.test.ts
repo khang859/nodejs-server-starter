@@ -1,10 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { UserController } from './UserController';
 import { UserService } from '@/services/UserService';
-import { IUser } from '@/models/UserModel';
+import { User, CreateUser } from '@/models/UserModel';
+import { DatabaseService } from '@/services/DatabaseService';
 
-// Mock UserService
+// Mock UserService and DatabaseService
 jest.mock('@/services/UserService');
+jest.mock('@/services/DatabaseService');
 
 describe('UserController', () => {
   let userController: UserController;
@@ -21,13 +23,30 @@ describe('UserController', () => {
       code: jest.fn().mockReturnThis(),
       send: jest.fn().mockReturnThis(),
     };
+
+    // Mock password hashing
+    jest.spyOn(DatabaseService, 'hashPassword').mockImplementation(async (password) => `hashed_${password}`);
   });
 
   describe('getUsers', () => {
     it('should return all users with status 200', async () => {
       const mockUsers = [
-        { id: 1, name: 'John', email: 'john@example.com' },
-        { id: 2, name: 'Jane', email: 'jane@example.com' },
+        { 
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          name: 'John',
+          email: 'john@example.com',
+          password: 'hashed_password123',
+          createdAt: new Date('2025-01-01T18:28:35-05:00'),
+          updatedAt: new Date('2025-01-01T18:28:35-05:00')
+        },
+        { 
+          id: '987fcdeb-51a2-43d7-9b56-426614174001',
+          name: 'Jane',
+          email: 'jane@example.com',
+          password: 'hashed_password456',
+          createdAt: new Date('2025-01-01T18:28:35-05:00'),
+          updatedAt: new Date('2025-01-01T18:28:35-05:00')
+        },
       ];
 
       mockUserService.findAll = jest.fn().mockResolvedValue(mockUsers);
@@ -49,10 +68,18 @@ describe('UserController', () => {
   });
 
   describe('getUser', () => {
-    it('should return user with status 200 when found', async () => {
-      const mockUser = { id: 1, name: 'John', email: 'john@example.com' };
+    it('should return user by id with status 200', async () => {
+      const mockUser = { 
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'John',
+        email: 'john@example.com',
+        password: 'hashed_password123',
+        createdAt: new Date('2025-01-01T18:28:35-05:00'),
+        updatedAt: new Date('2025-01-01T18:28:35-05:00')
+      };
+
       mockRequest = {
-        params: { id: '1' },
+        params: { id: mockUser.id },
       };
 
       mockUserService.findById = jest.fn().mockResolvedValue(mockUser);
@@ -100,23 +127,34 @@ describe('UserController', () => {
   });
 
   describe('createUser', () => {
-    it('should create user and return 201 when valid data', async () => {
-      const mockUserData = { name: 'John', email: 'john@example.com' };
-      const mockCreatedUser = { id: 1, ...mockUserData };
-
-      mockRequest = {
-        body: mockUserData,
+    it('should create user and return 201 status', async () => {
+      const newUser = {
+        name: 'John',
+        email: 'john@example.com',
+        password: 'password123'
       };
 
-      mockUserService.create = jest.fn().mockResolvedValue(mockCreatedUser);
+      const createdUser = {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        ...newUser,
+        password: 'hashed_password123',
+        createdAt: new Date('2025-01-01T18:28:35-05:00'),
+        updatedAt: new Date('2025-01-01T18:28:35-05:00')
+      };
+
+      mockRequest = {
+        body: newUser,
+      };
+
+      mockUserService.create = jest.fn().mockResolvedValue(createdUser);
 
       await userController.createUser(
-        mockRequest as FastifyRequest<{ Body: Omit<IUser, 'id'> }>,
+        mockRequest as FastifyRequest<{ Body: Omit<User, 'id'> }>,
         mockReply as FastifyReply
       );
 
       expect(mockReply.code).toHaveBeenCalledWith(201);
-      expect(mockReply.send).toHaveBeenCalledWith(mockCreatedUser);
+      expect(mockReply.send).toHaveBeenCalledWith(createdUser);
     });
 
     it('should return 400 when invalid user data', async () => {
@@ -127,7 +165,7 @@ describe('UserController', () => {
       };
 
       await userController.createUser(
-        mockRequest as FastifyRequest<{ Body: Omit<IUser, 'id'> }>,
+        mockRequest as FastifyRequest<{ Body: Omit<User, 'id'> }>,
         mockReply as FastifyReply
       );
 
@@ -136,7 +174,7 @@ describe('UserController', () => {
     });
 
     it('should return 500 when service throws error', async () => {
-      const mockUserData = { name: 'John', email: 'john@example.com' };
+      const mockUserData = { name: 'John', email: 'john@example.com', password: 'password123' };
 
       mockRequest = {
         body: mockUserData,
@@ -145,7 +183,7 @@ describe('UserController', () => {
       mockUserService.create = jest.fn().mockRejectedValue(new Error('Database error'));
 
       await userController.createUser(
-        mockRequest as FastifyRequest<{ Body: Omit<IUser, 'id'> }>,
+        mockRequest as FastifyRequest<{ Body: Omit<User, 'id'> }>,
         mockReply as FastifyReply
       );
 

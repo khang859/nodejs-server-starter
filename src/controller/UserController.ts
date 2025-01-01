@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { UserService } from '@/services/UserService';
-import { IUser, User } from '@/models/UserModel';
+import { User, CreateUser } from '@/models/UserModel';
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -16,7 +16,7 @@ export class UserController {
 
   async getUser(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      const id = parseInt(request.params.id);
+      const { id } = request.params;
       const user = await this.userService.findById(id);
 
       if (!user) {
@@ -29,11 +29,12 @@ export class UserController {
     }
   }
 
-  async createUser(request: FastifyRequest<{ Body: Omit<IUser, 'id'> }>, reply: FastifyReply) {
+  async createUser(request: FastifyRequest<{ Body: CreateUser }>, reply: FastifyReply) {
     try {
       const userData = request.body;
 
-      if (!User.validate(userData)) {
+      // Basic validation
+      if (!userData.name || !userData.email || !userData.password) {
         return reply.code(400).send({ error: 'Invalid user data' });
       }
 

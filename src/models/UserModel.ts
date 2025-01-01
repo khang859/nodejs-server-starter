@@ -1,23 +1,16 @@
-export interface IUser {
-  id: number;
-  name: string;
-  email: string;
-}
+import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
-export class User implements IUser {
-  id: number;
-  name: string;
-  email: string;
+export const usersTable = pgTable('users', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  name: varchar('name').notNull(),
+  email: varchar('email').notNull().unique(),
+  password: varchar('password').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
 
-  constructor(id: number, name: string, email: string) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-  }
-
-  static validate(user: Partial<IUser>): boolean {
-    if (!user.name || !user.email) return false;
-    if (typeof user.name !== 'string' || typeof user.email !== 'string') return false;
-    return true;
-  }
-}
+export type CreateUser = typeof usersTable.$inferInsert;
+export type User = typeof usersTable.$inferSelect;
