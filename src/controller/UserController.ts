@@ -11,7 +11,6 @@ export class UserController {
       const users = await this.userService.findAll();
       return reply.code(200).send(users);
     } catch (error) {
-      console.log(error);
       return reply.code(500).send({ error: 'Internal Server Error' });
     }
   }

@@ -150,8 +150,8 @@ describe('UserService', () => {
 
       const expectedUser = {
         id: '123e4567-e89b-12d3-a456-426614174000',
-        ...newUser,
-        password: 'hashed_password123',
+        name: 'John',
+        email: 'john@example.com',
         createdAt: new Date('2025-01-01T18:33:01-05:00'),
         updatedAt: new Date('2025-01-01T18:33:01-05:00')
       };
