@@ -11,6 +11,8 @@ services:
       - .:/app
     depends_on:
       - postgres
+    networks:
+      - demo
   postgres:
     image: postgres:latest
     restart: always
@@ -20,6 +22,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
+    networks:
+      - demo
 
 volumes:
   postgres_data:
+
+networks:
+  demo:

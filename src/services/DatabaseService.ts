@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 
 const connectionString = process.env['DATABASE_URL'];
 
@@ -19,11 +19,10 @@ export class DatabaseService {
   }
 
   static async hashPassword(password: string): Promise<string> {
-    const saltRounds = 10;
-    return bcrypt.hash(password, saltRounds);
+    return argon2.hash(password);
   }
 
   static async comparePassword(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash);
+    return argon2.verify(hash, password);
   }
 }

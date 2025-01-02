@@ -75,6 +75,7 @@ export class UserService {
         .returning();
       return user;
     } catch (error: unknown) {
+      console.log('Error creating user:', error);
       if (error instanceof Error && 'code' in error && error.code === '23505') {
         throw new ValidationError('Email already exists');
       }
