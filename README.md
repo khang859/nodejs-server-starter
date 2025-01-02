@@ -6,14 +6,18 @@ Simple NodeJS based server starter repo.
 
 - NodeJS 22+
 - Typescript
-- Express
+- Fastify
+- Drizzle ORM
+- PostgreSQL
+- Zod
+- Eslint
 - Prettier for code formatting
 - Docker and Docker Compose
 
-## Usage
+## Local Development
 
-1. Clone the repository
+1. Clone the repository and `cd` into it
 2. Run `yarn install` to install dependencies
-3. Run `docker compose up -d` to start the server
-4. Fill out the .env file with your database credentials
-5. Run `yarn db:push` to create the database
+3. Create a `.env` file with your database credentials (see `.env.example`)
+4. Run `docker compose up -d` to start the server
+5. Run `yarn db:push` to create the database (Make sure postgres docker container is running)
