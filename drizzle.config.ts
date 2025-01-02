@@ -1,6 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
 import { readdirSync } from 'fs';
 import path from 'path';
+import 'dotenv/config';
 
 const connectionString = process.env.DATABASE_URL!;
 const modelsPath = path.join(__dirname, 'src/models');

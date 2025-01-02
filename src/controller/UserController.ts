@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import { UserService } from '@/services/UserService';
-import { User, CreateUser } from '@/models/UserModel';
+import { UserService, ValidationError } from '@/services/UserService';
+import { CreateUser } from '@/models/UserModel';
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -11,6 +11,7 @@ export class UserController {
       const users = await this.userService.findAll();
       return reply.code(200).send(users);
     } catch (error) {
+      console.log(error);
       return reply.code(500).send({ error: 'Internal Server Error' });
     }
   }
@@ -47,6 +48,9 @@ export class UserController {
       const user = await this.userService.create(userData.data);
       return reply.code(201).send(user);
     } catch (error) {
+      if (error instanceof ValidationError) {
+        return reply.code(400).send({ error: error.message });
+      }
       return reply.code(500).send({ error: 'Internal Server Error' });
     }
   }

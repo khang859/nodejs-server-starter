@@ -1,4 +1,4 @@
-import { CreateUser, User } from '@/models/UserModel';
+import { CreateUser, CreateUserOutput, User } from '@/models/UserModel';
 import { DatabaseService } from './DatabaseService';
 import { usersTable } from '@/models/UserModel';  
 import { eq } from 'drizzle-orm';
@@ -62,7 +62,7 @@ export class UserService {
     }
   }
 
-  async create(userData: CreateUser): Promise<User> {
+  async create(userData: CreateUser): Promise<CreateUserOutput> {
     if (!userData.email || !userData.password || !userData.name) {
       throw new ValidationError('Email, password, and name are required');
     }
@@ -73,7 +73,14 @@ export class UserService {
         .insert(usersTable)
         .values({ ...userData, password: hashedPassword })
         .returning();
-      return user;
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
     } catch (error: unknown) {
       if (error instanceof Error && 'code' in error && error.code === '23505') {
         throw new ValidationError('Email already exists');

@@ -14,3 +14,10 @@ export const usersTable = pgTable('users', {
 
 export type CreateUser = typeof usersTable.$inferInsert;
 export type User = typeof usersTable.$inferSelect;
+export type CreateUserOutput = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
