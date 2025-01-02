@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { z } from 'zod';
 import { UserService } from '@/services/UserService';
 import { User, CreateUser } from '@/models/UserModel';
 
@@ -31,14 +32,19 @@ export class UserController {
 
   async createUser(request: FastifyRequest<{ Body: CreateUser }>, reply: FastifyReply) {
     try {
-      const userData = request.body;
+      const schema = z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        password: z.string().min(8),
+      });
 
-      // Basic validation
-      if (!userData.name || !userData.email || !userData.password) {
+      const userData = schema.safeParse(request.body);
+
+      if (!userData.success) {
         return reply.code(400).send({ error: 'Invalid user data' });
       }
 
-      const user = await this.userService.create(userData);
+      const user = await this.userService.create(userData.data);
       return reply.code(201).send(user);
     } catch (error) {
       return reply.code(500).send({ error: 'Internal Server Error' });
